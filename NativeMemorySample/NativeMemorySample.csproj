@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.5-develop" />
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.11.5-develop" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NativeDllWraper\NativeDllWraper.csproj" />
+  </ItemGroup>
+</Project>
