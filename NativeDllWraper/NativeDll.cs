@@ -24,5 +24,11 @@ namespace NativeDllWraper
 
         [DllImport("NativeDll.dll")]
         public static extern void DeallocateArrayOfPoint(IntPtr ptr);
+
+        [DllImport("NativeDll.dll")]
+        public static extern void AllocReallocAndFree();
+
+        [DllImport("NativeDll.dll")]
+        public static extern void AllocReallocAndFreeUsingVector();
     }
 }

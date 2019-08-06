@@ -1,46 +1,31 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System;
+using System.Runtime.InteropServices;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnostics.Windows.Configs;
-using NativeDllWraper;
 
 namespace NativeMemorySample
 {
-    [ShortRunJob]
-    [NativeMemoryProfiler]
-    [MemoryDiagnoser]
-    public class IntroNativeMemory
+[ShortRunJob]
+[NativeMemoryProfiler]
+[MemoryDiagnoser]
+public class IntroNativeMemory
+{
+    private const int Size = 20; // Greater value could cause System.OutOfMemoryException for test with memory leaks.
+    private int ArraySize = Size * Marshal.SizeOf(typeof(int));
+
+    [Benchmark]
+    public unsafe void AllocHGlobal()
     {
-        [Benchmark]
-        public void AllocManyType()
-        {
-            var ptr = NativeDll.AllocateArrayOfInt(200);
-            ptr = NativeDll.AllocateArrayOfInt(150);
-            ptr = NativeDll.AllocateArrayOfPoint(200);
-        }
-
-        [Benchmark]
-        public void AllocAndFreeNativeInt()
-        {
-            var ptr = NativeDll.AllocateArrayOfInt(200);
-            NativeDll.DeallocateArrayOfInt(ptr);
-        }
-
-        [Benchmark]
-        public void AllocNativeInt()
-        {
-            var ptr = NativeDll.AllocateArrayOfInt(200);
-        }
-
-        [Benchmark]
-        public void AllocAndFreeNativeStruct()
-        {
-            var ptr = NativeDll.AllocateArrayOfPoint(200);
-            NativeDll.DeallocateArrayOfPoint(ptr);
-        }
-
-        [Benchmark]
-        public void AllocNativeStruct()
-        {
-            var ptr = NativeDll.AllocateArrayOfPoint(200);
-        }
+        IntPtr unmanagedHandle = Marshal.AllocHGlobal(ArraySize);
+        Span<byte> unmanaged = new Span<byte>(unmanagedHandle.ToPointer(), ArraySize);
+        Marshal.FreeHGlobal(unmanagedHandle);
     }
+
+    [Benchmark]
+    public unsafe void AllocHGlobalWithLeaks()
+    {
+        IntPtr unmanagedHandle = Marshal.AllocHGlobal(ArraySize);
+        Span<byte> unmanaged = new Span<byte>(unmanagedHandle.ToPointer(), ArraySize);
+    }
+}
 }

@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 #include <stdio.h>
+#include <cstdlib>
+#include <vector>
 
 
 extern "C"
@@ -45,5 +47,48 @@ extern "C"
 	__declspec(dllexport) void DeallocateArrayOfPoint(Point* ptr)
 	{
 		delete[] ptr;
+	}
+
+	__declspec(dllexport) void AllocReallocAndFree()
+	{
+		// Set the number of elements for the array
+		int n = 50;
+
+		//Alloc memory
+		int* ptr = static_cast<int*>(malloc(n * sizeof(int)));
+
+		// Check if the memory has been successfully allocated by malloc or not
+		if (ptr == nullptr)
+		{
+			return;
+		}
+
+		// Set the new size for the array
+		n = 100;
+
+		// Dynamically re-allocate memory using realloc()
+		ptr = static_cast<int*>(realloc(ptr, n * sizeof(int)));
+
+		// Free the memory
+		free(ptr);
+	}
+
+	__declspec(dllexport) void AllocReallocAndFreeUsingVector()
+	{
+		// Set the number of elements for the array
+		int n = 50;
+
+		//Alloc memory
+		//int* ptr = static_cast<int*>(malloc(n * sizeof(int)));
+		std::vector<int> vector(n, 0);
+
+		// Set the new size for the array
+		n = 100;
+
+		// Dynamically re-allocate memory using realloc()
+		vector.resize(n);
+
+		// Free the memory
+		vector.clear();
 	}
 }
